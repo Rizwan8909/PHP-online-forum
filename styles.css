@@ -1,0 +1,39 @@
+.line{
+    max-width: 80px; height: 5px; background-color: #FF5678;
+}
+
+
+.hover{
+    transition: transform 0.4s ease;
+}
+.hover:hover{
+ 
+    transform: translateY(-10px);
+}
+
+@keyframes fade{
+    0%{
+        opacity: 0;
+        }
+    100%{
+        transform: rotate(xx);
+        opacity: 1;
+        }
+}
+
+.fadeImage{
+    animation: fade 3s forwards 0s ease;
+}
+
+@keyframes slide{
+    0%{
+        transform: translateX(-20%);
+        }
+    100%{
+        transform: rotate(xx) translateX(0);
+        }
+}
+
+.textSlide{
+    animation: slide 0.8s forwards ease;
+}
