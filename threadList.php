@@ -21,23 +21,23 @@
 
     <!-- Getting data from index.php -->
     <?php
-        $id = $_GET['categoryid'];
+    $id = $_GET['categoryid'];
 
-        $sql = 'SELECT * FROM `categories` WHERE category_id = '.$id .' ';
-        $result = mysqli_query($conn, $sql);
+    $sql = 'SELECT * FROM `categories` WHERE category_id = ' . $id . ' ';
+    $result = mysqli_query($conn, $sql);
 
-        while($row=mysqli_fetch_assoc($result)){
-            $category_name = $row['category_title'];
-            $category_desc = $row['category_description'];
-        }
+    while ($row = mysqli_fetch_assoc($result)) {
+        $category_name = $row['category_title'];
+        $category_desc = $row['category_description'];
+    }
     ?>
     <!-- Jumbotron -->
 
     <div class="container">
         <div class="jumbotron jumbotron-fluid bg-white">
             <div class="container">
-                <h1 class="display-4">Welcome to <?php echo $category_name;?> Forum</h1>
-                <p class="lead"><?php echo $category_desc;?></p>
+                <h1 class="display-4">Welcome to <?php echo $category_name; ?> Forum</h1>
+                <p class="lead"><?php echo $category_desc; ?></p>
                 <hr class="my-4">
 
                 <p class="lead">Some rules of the forum are listed below</p>
@@ -52,35 +52,67 @@
         </div>
     </div>
 
-    <div class="container-fluid bg-light">
+
+    <!-- Ask question Form -->
+    <div class="container">
+        <h3 class="pb-1">Start Discussion</h3>
+        <div class="line mb-4" style="margin: 0"></div>
+
+        <form>
+            <div class="form-group">
+                <input type="text" class="form-control rounded-0 border-dark" id="title" name="title" placeholder="Ask your question">
+                <small class="form-text text-muted">Keep your title precise and to the topic.</small>
+            </div>
+
+            <div class="form-group">
+                <textarea class="form-control rounded-0 border-dark" id="desc" name="desc" rows="3" placeholder="Describe your problem"></textarea>
+            </div>
+
+            <button class="btn rounded-0 text-white" type="submit" style="background-color: #FF5678;">Submit Question</button>
+        </form>
+    </div>
+
+    <!-- Questions  -->
+    <div class="container-fluid bg-light my-5 p-2">
         <div class="container">
             <h3 class="mb-2">Browse Questions.</h3>
             <div class="line" style="margin: 0"></div>
 
 
-
             <!-- Questions Dynamically from the database -->
 
             <?php
-                $id = $_GET['categoryid'];
-                $sql = 'SELECT * FROM `threads` WHERE thread_cat_id = ' .$id .' ';
-                $result = mysqli_query($conn, $sql);
+            $id = $_GET['categoryid'];
+            $sql = 'SELECT * FROM `threads` WHERE thread_cat_id = ' . $id . ' ';
+            $result = mysqli_query($conn, $sql);
+            $noResult = true;
 
-                while($row=mysqli_fetch_assoc($result)){
-                    $thread_id = $row['thread_id'];
-                    $thread_title = $row['thread_title'];
-                    $thread_desc = $row['thread_desc'];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $noResult = false;
+                $id = $row['thread_id'];
+                $thread_title = $row['thread_title'];
+                $thread_desc = $row['thread_desc'];
 
-                    echo '<div class="media bg-white my-4 shadow-sm p-2">
+                echo '<div class="media bg-white my-4 shadow-sm p-2">
                             <img src="images/user.svg" class="mr-3" alt="random user">
                              <div class="media-body">
-                                <h5 class="mt-0"><a class="text-dark" href="thread.php">'. $thread_title . '</a></h5>
+                                <h5 class="mt-0"><a class="text-dark" href="thread.php?threadid=' . $id . '">' . $thread_title . '</a></h5>
                                 ' . $thread_desc . '
                             </div>
                         </div>';
-                }
+            }
+
+            // If no Question found then
+            if ($noResult) {
+                echo '<div class="jumbotron jumbotron-fluid bg-light">
+                            <div class="container">
+                            <h1 class="display-4">No results found! :(</h1>
+                            <p class="lead">Be the first person to start the discussion.</p>
+                        </div>
+                        </div>';
+            }
             ?>
-  
+
         </div>
     </div>
 
