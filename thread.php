@@ -56,14 +56,58 @@
         </div>
     </div>
 
-    <div class="container-fluid bg-light">
+
+    <!-- Comment Form similar to ask question -->
+    <div class="container">
+        <h3 class="pb-1">Comment</h3>
+        <div class="line mb-4" style="margin: 0"></div>
+
+        <!-- Following request action in form tag will submit form to itself -->
+        <form action="<?php echo $_SERVER['REQUEST_URI']?>" method = 'post'>
+            <div class="form-group">
+                <textarea class="form-control rounded-0 border-dark" id="desc" name="desc" rows="3" placeholder="Type your comment"></textarea>
+            </div>
+            <button class="btn rounded-0 text-white" type="submit" style="background-color: #FF5678;">Post Comment</button>
+        </form>
+    </div>
+
+
+    <!-- Comments -->
+    <div class="container-fluid bg-light my-5">
         <div class="container">
             <h3 class="mb-2">Discussions.</h3>
             <div class="line" style="margin: 0"></div>
+  
+            <!-- Fetching the Comments Dynamically from Database -->
+            <?php
+            $id = $_GET['threadid'];
+            $sql = 'SELECT * FROM `comments` WHERE thread_id = ' . $id . ' ';
+            $result = mysqli_query($conn, $sql);
+            $noResult = true;
 
+            while ($row = mysqli_fetch_assoc($result)) {
+                $noResult = false;
+                $id = $row['comment_id'];
+                $comment_desc = $row['comment_content'];
 
+                echo '<div class="media bg-white my-4 shadow-sm p-2">
+                            <img src="images/user.svg" class="mr-3" alt="random user">
+                             <div class="media-body">
+                                <h5 class="mt-0"><a class="text-dark" href="thread.php?commentid=' . $id . '">' . $comment_content . '</a></h5>
+                            </div>
+                        </div>';
+            }
 
-            <!-- Questions Dynamically from the database -->
+            // If no Question found then
+            if ($noResult) {
+                echo '<div class="jumbotron jumbotron-fluid bg-light">
+                            <div class="container">
+                            <h1 class="display-4">No results found! :(</h1>
+                            <p class="lead">Be the first person to comment.</p>
+                        </div>
+                        </div>';
+            }
+            ?>
 
         </div>
     </div>

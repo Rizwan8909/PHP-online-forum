@@ -11,11 +11,10 @@
     transform: translateY(-10px);
 }
 
+.customCol{
+    background-color: green;
+} 
 
-.Border{
-    border: none; 
-    border-bottom: 1px solid grey;
-}
 @keyframes fade{
     0%{
         opacity: 0;

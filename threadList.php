@@ -31,6 +31,34 @@
         $category_desc = $row['category_description'];
     }
     ?>
+
+
+    <!-- Record / Question insertion to the databse -->
+    <?php
+        $showAlert = false;
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $title = $_POST['title'];
+            $desc = $_POST['desc'];
+
+            $sql = "INSERT INTO `threads` (`thread_title`, `thread_desc`, `thread_cat_id`, `thread_user_id`, `timestamp`) 
+                VALUES ('$title', '$desc', '$id', '0', current_timestamp());
+            ";
+
+            $result = mysqli_query($conn, $sql);
+            $showAlert = true;
+            if($showAlert){
+                echo '<div class="alert shadow-sm rounded-0 text-white alert-dismissible fade show" role="alert" style="background-color: green">
+                        <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>';
+            }
+          
+        }
+
+        
+    ?>
     <!-- Jumbotron -->
 
     <div class="container">
@@ -58,7 +86,9 @@
         <h3 class="pb-1">Start Discussion</h3>
         <div class="line mb-4" style="margin: 0"></div>
 
-        <form>
+        <!-- Following request method will submit form to itself -->
+
+        <form action="<?php echo $_SERVER['REQUEST_URI']?>" method = 'post'>
             <div class="form-group">
                 <input type="text" class="form-control rounded-0 border-dark" id="title" name="title" placeholder="Ask your question">
                 <small class="form-text text-muted">Keep your title precise and to the topic.</small>
@@ -72,6 +102,8 @@
         </form>
     </div>
 
+    
+
     <!-- Questions  -->
     <div class="container-fluid bg-light my-5 p-2">
         <div class="container">
@@ -80,7 +112,6 @@
 
 
             <!-- Questions Dynamically from the database -->
-
             <?php
             $id = $_GET['categoryid'];
             $sql = 'SELECT * FROM `threads` WHERE thread_cat_id = ' . $id . ' ';
