@@ -59,8 +59,7 @@
 
         
     ?>
-    <!-- Jumbotron -->
-
+    <!-- Jumbotron for welcoming-->
     <div class="container">
         <div class="jumbotron jumbotron-fluid bg-white">
             <div class="container">
@@ -123,10 +122,12 @@
                 $id = $row['thread_id'];
                 $thread_title = $row['thread_title'];
                 $thread_desc = $row['thread_desc'];
+                $thread_time = $row['timestamp'];
 
                 echo '<div class="media bg-white my-4 shadow-sm p-2">
                             <img src="images/user.svg" class="mr-3" alt="random user">
                              <div class="media-body">
+                                <p class="mt-0 text-secondary"><b>Anonymous user </b>' . $thread_time . '</p>
                                 <h5 class="mt-0"><a class="text-dark" href="thread.php?threadid=' . $id . '">' . $thread_title . '</a></h5>
                                 ' . $thread_desc . '
                             </div>

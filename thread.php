@@ -34,24 +34,51 @@
             $thread_desc = $row['thread_desc'];           
         }
 
-        if ($noResult) {
-            echo '<div class="jumbotron jumbotron-fluid bg-light">
-                        <div class="container">
-                        <h1 class="display-4">No results found! :(</h1>
-                        <p class="lead">Be the first person to start the discussion.</p>
-                    </div>
-                    </div>';
-        }
+        // if ($noResult) {
+        //     echo '<div class="jumbotron jumbotron-fluid bg-light">
+        //                 <div class="container">
+        //                 <h1 class="display-4">No results found! :(</h1>
+        //                 <p class="lead">Be the first person to start the discussion.</p>
+        //             </div>
+        //             </div>';
+        // }
     ?>
-    <!-- Jumbotron -->
 
+
+     <!-- Comments insertion to the databse -->
+    <?php
+        $showAlert = false;
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $comment = $_POST['comment'];
+
+            $sql = "INSERT INTO `comments` (`comment_content`, `comment_by`, `thread_id`, `comment_time`) 
+                VALUES ('$comment', '0', '$id', current_timestamp());
+            ";
+
+            $result = mysqli_query($conn, $sql);
+            $showAlert = true;
+            if($showAlert){
+                echo '<div class="alert shadow-sm rounded-0 text-white alert-dismissible fade show" role="alert" style="background-color: green">
+                        <strong>Sucess!</strong> Your comment is sucessfully added.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>';
+            }
+          
+        }     
+    ?>
+    
+
+
+    <!-- Jumbotron for welcoming-->
     <div class="container">
         <div class="jumbotron jumbotron-fluid bg-white">
             <div class="container">
                 <h1 class="display-4"><?php echo $thread_title;?></h1>
                 <p class="lead"><?php echo $thread_desc;?></p>
                 <hr class="my-4">
-                <p class="font-weight-bold">posted by: rizwan</p>    
+                <p>posted by: <b>rizwan</b></p>    
             </div>
         </div>
     </div>
@@ -65,7 +92,7 @@
         <!-- Following request action in form tag will submit form to itself -->
         <form action="<?php echo $_SERVER['REQUEST_URI']?>" method = 'post'>
             <div class="form-group">
-                <textarea class="form-control rounded-0 border-dark" id="desc" name="desc" rows="3" placeholder="Type your comment"></textarea>
+                <textarea class="form-control rounded-0 border-dark" id="comment" name="comment" rows="3" placeholder="Type your comment"></textarea>
             </div>
             <button class="btn rounded-0 text-white" type="submit" style="background-color: #FF5678;">Post Comment</button>
         </form>
@@ -88,12 +115,14 @@
             while ($row = mysqli_fetch_assoc($result)) {
                 $noResult = false;
                 $id = $row['comment_id'];
-                $comment_desc = $row['comment_content'];
+                $comment_content = $row['comment_content'];
+                $comment_time = $row['comment_time'];
 
                 echo '<div class="media bg-white my-4 shadow-sm p-2">
                             <img src="images/user.svg" class="mr-3" alt="random user">
                              <div class="media-body">
-                                <h5 class="mt-0"><a class="text-dark" href="thread.php?commentid=' . $id . '">' . $comment_content . '</a></h5>
+                                <h6 class="mt-0 my-0">Anonymous user ' . $comment_time . '</h6>
+                                <p class="my-0">' . $comment_content . '</a></p>
                             </div>
                         </div>';
             }
