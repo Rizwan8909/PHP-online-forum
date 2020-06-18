@@ -17,7 +17,6 @@
 
 
     <?php include 'partials/_header.php'; ?>
-   
     <?php include 'partials/_dbConnection.php'?>
 
     <!-- Main slider -->
@@ -60,7 +59,7 @@
                     $description = $row['category_description'];
 
                     echo '<div class="card border-0 m-4 shadow-sm hover" style="width: 20rem;">
-                            <img src="https://source.unsplash.com/1600x1200/?code,'. $category .'" class="card-img-top rounded-0" alt="...">
+                            <img src="https://source.unsplash.com/800x600/?code,'. $category .'" class="card-img-top rounded-0" alt="...">
                              <div class="card-body p-3">
                                 <h5 class="card-title">'. $category .'</h5>
                                 <p class="card-text">'. substr($description, 0, 90) .'...</p>
