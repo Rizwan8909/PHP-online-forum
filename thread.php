@@ -51,8 +51,11 @@
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $comment = $_POST['comment'];
 
+            // Inserting user_id , For explanation check the code below of form
+            $sno = $_POST['user_id'];
+
             $sql = "INSERT INTO `comments` (`comment_content`, `comment_by`, `thread_id`, `comment_time`) 
-                VALUES ('$comment', '0', '$id', current_timestamp());
+                VALUES ('$comment', '$sno', '$id', current_timestamp());
             ";
 
             $result = mysqli_query($conn, $sql);
@@ -78,7 +81,8 @@
                 <h1 class="display-4"><?php echo $thread_title;?></h1>
                 <p class="lead"><?php echo $thread_desc;?></p>
                 <hr class="my-4">
-                <p>posted by: <b>rizwan</b></p>    
+                <!-- Prinitng user_email using session -->
+                <p>posted by: <b><?php echo $_SESSION['useremail']?></b></p>    
             </div>
         </div>
     </div>
@@ -90,12 +94,32 @@
         <div class="line mb-4" style="margin: 0"></div>
 
         <!-- Following request action in form tag will submit form to itself -->
-        <form action="<?php echo $_SERVER['REQUEST_URI']?>" method = 'post'>
+        <!-- Enabling logged in user to comment with php -->
+       
+        <?php
+            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+
+                echo '<form action="' . $_SERVER["REQUEST_URI"] . '" method = "post">
+                        <div class="form-group">
+                            <textarea class="form-control rounded-0 border-dark" id="comment" name="comment" rows="3" placeholder="Type your comment"></textarea>
+                            <input type="hidden" name="user_id" value="'. $_SESSION['user_id'].'">
+                            </div>
+                        <button class="btn rounded-0 text-white" type="submit" style="background-color: #FF5678;">Post Comment</button>
+                    </form>';
+            }
+            else{
+                echo '<p class="lead">You are not logged in. Login to comment.</p>';
+            }
+        ?>
+       
+       
+       
+       <!-- <form action="?php echo ' . $_SERVER["REQUEST_URI"] . ' ?>" method = 'post'>
             <div class="form-group">
                 <textarea class="form-control rounded-0 border-dark" id="comment" name="comment" rows="3" placeholder="Type your comment"></textarea>
             </div>
             <button class="btn rounded-0 text-white" type="submit" style="background-color: #FF5678;">Post Comment</button>
-        </form>
+        </form> -->
     </div>
 
 
@@ -117,11 +141,17 @@
                 $id = $row['comment_id'];
                 $comment_content = $row['comment_content'];
                 $comment_time = $row['comment_time'];
+                $comment_by = $row['comment_by'];
+
+                // Getting emails for comments from users table
+                $user_sql = 'SELECT * FROM `users` WHERE user_id = '.$comment_by.'';
+                $user_result = mysqli_query($conn, $user_sql);
+                $user_row = mysqli_fetch_assoc($user_result);
 
                 echo '<div class="media bg-white my-4 shadow-sm p-2">
                             <img src="images/user.svg" class="mr-3" alt="random user">
                              <div class="media-body">
-                                <h6 class="mt-0 my-0">Anonymous user ' . $comment_time . '</h6>
+                                <h6 class="mt-0 my-0">'.$user_row['user_email'].' at ' . $comment_time . '</h6>
                                 <p class="my-0">' . $comment_content . '</a></p>
                             </div>
                         </div>';
