@@ -41,6 +41,10 @@
         $desc = $_POST['desc'];
         $sno = $_POST['user_id'];
 
+        // Securing website from XSS attack by replacing tags <>
+        $desc = str_replace("<", "&lt", $desc);
+        $desc = str_replace(">", "&gt", $desc);
+
         $sql = "INSERT INTO `threads` (`thread_title`, `thread_desc`, `thread_cat_id`, `thread_user_id`, `timestamp`) 
                 VALUES ('$title', '$desc', '$id', '$sno', current_timestamp());
             ";
@@ -49,7 +53,7 @@
         $showAlert = true;
         if ($showAlert) {
             echo '<div class="alert shadow-sm rounded-0 text-white alert-dismissible fade show" role="alert" style="background-color: green">
-                        <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                        <strong>Success!</strong> Your problem has been added wait for the community to respond.
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                          <span aria-hidden="true">&times;</span>
                         </button>

@@ -31,17 +31,15 @@
         while($row=mysqli_fetch_assoc($result)){
             $noResult = false;
             $thread_title = $row['thread_title'];
-            $thread_desc = $row['thread_desc'];           
+            $thread_desc = $row['thread_desc'];      
+            
+            // Getting user id from db to display in (posted by)
+            $thread_user_id = $row['thread_user_id'];
+            $sql_useremail = "SELECT user_email FROM `users` WHERE user_id = '$thread_user_id'";
+            $email_result = mysqli_query($conn, $sql_useremail);
+            $email_row = mysqli_fetch_assoc($email_result);
+            $posted_by = $email_row['user_email'];
         }
-
-        // if ($noResult) {
-        //     echo '<div class="jumbotron jumbotron-fluid bg-light">
-        //                 <div class="container">
-        //                 <h1 class="display-4">No results found! :(</h1>
-        //                 <p class="lead">Be the first person to start the discussion.</p>
-        //             </div>
-        //             </div>';
-        // }
     ?>
 
 
@@ -50,6 +48,10 @@
         $showAlert = false;
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $comment = $_POST['comment'];
+
+            // Securing website from XSS attack by replacing tags <>
+            $comment = str_replace("<", "&lt", $comment);
+            $comment = str_replace(">", "&gt", $comment);
 
             // Inserting user_id , For explanation check the code below of form
             $sno = $_POST['user_id'];
@@ -81,8 +83,8 @@
                 <h1 class="display-4"><?php echo $thread_title;?></h1>
                 <p class="lead"><?php echo $thread_desc;?></p>
                 <hr class="my-4">
-                <!-- Prinitng user_email using session -->
-                <p>posted by: <b><?php echo $_SESSION['useremail']?></b></p>    
+                <!-- Prinitng user_email of the user 'Go up for code' -->
+                <p>posted by: <b><?php echo $posted_by;?></b></p>    
             </div>
         </div>
     </div>
