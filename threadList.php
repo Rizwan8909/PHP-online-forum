@@ -15,9 +15,9 @@
 
 <body style="overflow-x: hidden;">
 
-
-    <?php include 'partials/_header.php'; ?>
     <?php include 'partials/_dbConnection.php' ?>
+    <?php include 'partials/_header.php'; ?>
+   
 
     <!-- Getting data from index.php -->
     <?php
@@ -42,6 +42,9 @@
         $sno = $_POST['user_id'];
 
         // Securing website from XSS attack by replacing tags <>
+        $title = str_replace("<", "&lt", $title);
+        $title = str_replace(">", "&gt", $title);
+
         $desc = str_replace("<", "&lt", $desc);
         $desc = str_replace(">", "&gt", $desc);
 

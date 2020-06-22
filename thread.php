@@ -15,10 +15,9 @@
 
 <body style="overflow-x: hidden;">
 
-
-    <?php include 'partials/_header.php'; ?>
     <?php include 'partials/_dbConnection.php' ?>
-
+    <?php include 'partials/_header.php'; ?>
+   
   
     <?php
 
